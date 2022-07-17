@@ -1,0 +1,1144 @@
+class: GalaxyWorkflow
+label: pRESTO NEBNext Immune Sequencing Kit Workflow v3.2.0
+tags:
+- NEBNext
+uuid: 4ca578f5-2d71-4ca9-9254-baa240d98383
+inputs:
+  Input Datasets:
+    type: collection
+    optional: false
+    position:
+      bottom: 164.6999969482422
+      height: 61.80000305175781
+      left: -1087
+      right: -887
+      top: 102.89999389648438
+      width: 200
+      x: -1087
+      y: 102.89999389648438
+  R1 Primer FASTA:
+    type: data
+    optional: false
+    position:
+      bottom: 273.1499938964844
+      height: 61.79998779296875
+      left: -1084
+      right: -884
+      top: 211.35000610351562
+      width: 200
+      x: -1084
+      y: 211.35000610351562
+  R2 Primer FASTA:
+    type: data
+    optional: false
+    position:
+      bottom: 396.0500030517578
+      height: 82.19999694824219
+      left: -1084
+      right: -884
+      top: 313.8500061035156
+      width: 200
+      x: -1084
+      y: 313.8500061035156
+  C-Region FASTA:
+    type: data
+    optional: false
+    position:
+      bottom: 476.1499938964844
+      height: 61.79998779296875
+      left: -1079
+      right: -879
+      top: 414.3500061035156
+      width: 200
+      x: -1079
+      y: 414.3500061035156
+  Immune Ref FASTA:
+    type: data
+    optional: false
+    position:
+      bottom: 584.0500030517578
+      height: 82.19999694824219
+      left: -1084
+      right: -884
+      top: 501.8500061035156
+      width: 200
+      x: -1084
+      y: 501.8500061035156
+  NumReads:
+    type: float
+    optional: false
+    position:
+      bottom: 674.2000274658203
+      height: 61.80000305175781
+      left: -1081
+      right: -881
+      top: 612.4000244140625
+      width: 200
+      x: -1081
+      y: 612.4000244140625
+outputs:
+  _anonymous_output_1:
+    outputSource: NumReads
+  Final pRESTO Report:
+    outputSource: Final Report
+  Unique sequences:
+    outputSource: Unique Sequences/fastq_out
+  Unique C-regions:
+    outputSource: Uniq C-region Table
+  Unique sequences (>=2  reads):
+    outputSource: 35/upper_out
+  ' Unique C-regions (>=2 reads)':
+    outputSource: Unique C-region Table (>=2 obs)
+steps:
+- tool_id: __UNZIP_COLLECTION__
+  tool_version: 1.0.0
+  position:
+    bottom: 290.3000030517578
+    height: 164.40000915527344
+    left: -809.5
+    right: -609.5
+    top: 125.89999389648438
+    width: 200
+    x: -809.5
+    y: 125.89999389648438
+  tool_state:
+    input:
+      __class__: ConnectedValue
+  in:
+    input:
+      source: Input Datasets
+  out:
+    forward:
+      change_datatype:
+        newtype: fastqsanger
+      hide: true
+    reverse:
+      change_datatype:
+        newtype: fastqsanger
+      hide: true
+- tool_shed_repository:
+    name: seqtk
+    owner: iuc
+    changeset_revision: bc7d99f46a5d
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/seqtk/seqtk_sample/1.2.0
+  tool_version: 1.2.0
+  position:
+    bottom: 269.8999938964844
+    height: 144
+    left: -576.0499877929688
+    right: -376.04998779296875
+    top: 125.89999389648438
+    width: 200
+    x: -576.0499877929688
+    y: 125.89999389648438
+  tool_state:
+    in_file:
+      __class__: ConnectedValue
+    s: '4'
+    subsample_size:
+      __class__: ConnectedValue
+  in:
+    subsample_size:
+      source: NumReads
+    in_file:
+      source: 6/forward
+  out:
+    default:
+      hide: true
+- tool_shed_repository:
+    name: seqtk
+    owner: iuc
+    changeset_revision: bc7d99f46a5d
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/seqtk/seqtk_sample/1.2.0
+  tool_version: 1.2.0
+  position:
+    bottom: 434.3500061035156
+    height: 144
+    left: -579.0499877929688
+    right: -379.04998779296875
+    top: 290.3500061035156
+    width: 200
+    x: -579.0499877929688
+    y: 290.3500061035156
+  tool_state:
+    in_file:
+      __class__: ConnectedValue
+    s: '4'
+    subsample_size:
+      __class__: ConnectedValue
+  in:
+    in_file:
+      source: 6/reverse
+    subsample_size:
+      source: NumReads
+  out:
+    default:
+      hide: true
+- tool_shed_repository:
+    name: presto_filterseq
+    owner: iuc
+    changeset_revision: 7b102129b1e8
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_filterseq/presto_filterseq/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 280.6999969482422
+    height: 184.8000030517578
+    left: -349.5
+    right: -149.5
+    top: 95.89999389648438
+    width: 200
+    x: -349.5
+    y: 95.89999389648438
+  tool_state:
+    __job_resource:
+      __job_resource__select: 'no'
+      __current_case__: 0
+    capture_log: 'true'
+    cc:
+      command: quality
+      __current_case__: 3
+      q: '20'
+      inner: 'false'
+    fastq_in:
+      __class__: ConnectedValue
+  in:
+    fastq_in:
+      source: 7/default
+  out:
+    log_out:
+      hide: true
+    fastq_out:
+      hide: true
+- tool_shed_repository:
+    name: presto_filterseq
+    owner: iuc
+    changeset_revision: 7b102129b1e8
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_filterseq/presto_filterseq/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 464.6999969482422
+    height: 184.8000030517578
+    left: -351.5
+    right: -151.5
+    top: 279.8999938964844
+    width: 200
+    x: -351.5
+    y: 279.8999938964844
+  tool_state:
+    __job_resource:
+      __job_resource__select: 'no'
+      __current_case__: 0
+    capture_log: 'true'
+    cc:
+      command: quality
+      __current_case__: 3
+      q: '20'
+      inner: 'false'
+    fastq_in:
+      __class__: ConnectedValue
+  in:
+    fastq_in:
+      source: 8/default
+  out:
+    fastq_out:
+      hide: true
+    log_out:
+      hide: true
+- tool_shed_repository:
+    name: presto_maskprimers
+    owner: iuc
+    changeset_revision: 14e648d05cce
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_maskprimers/presto_maskprimers/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 302.1000061035156
+    height: 215.20001220703125
+    left: -84.5
+    right: 115.5
+    top: 86.89999389648438
+    width: 200
+    x: -84.5
+    y: 86.89999389648438
+  tool_state:
+    __job_resource:
+      __job_resource__select: 'no'
+      __current_case__: 0
+    barcode: 'false'
+    capture_log: 'true'
+    cc:
+      command: score
+      __current_case__: 1
+      start: '0'
+    fastq_in:
+      __class__: ConnectedValue
+    maxerror: '0.2'
+    mode: cut
+    primers_in:
+      __class__: ConnectedValue
+    revpr: 'false'
+  in:
+    primers_in:
+      source: R1 Primer FASTA
+    fastq_in:
+      source: 9/fastq_out
+  out:
+    log_out:
+      hide: true
+    fastq_out:
+      hide: true
+- tool_shed_repository:
+    name: presto_parselog
+    owner: iuc
+    changeset_revision: 488cd05be723
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_parselog/presto_parselog/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 549.5
+    height: 113.60000610351562
+    left: -84.5
+    right: 115.5
+    top: 435.8999938964844
+    width: 200
+    x: -84.5
+    y: 435.8999938964844
+  tool_state:
+    fields: ID QUALITY
+    log_file:
+      __class__: ConnectedValue
+  in:
+    log_file:
+      source: 9/log_out
+  out:
+    output:
+      hide: true
+- tool_shed_repository:
+    name: presto_maskprimers
+    owner: iuc
+    changeset_revision: 14e648d05cce
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_maskprimers/presto_maskprimers/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 471.1000061035156
+    height: 215.20001220703125
+    left: -90.5
+    right: 109.5
+    top: 255.89999389648438
+    width: 200
+    x: -90.5
+    y: 255.89999389648438
+  tool_state:
+    __job_resource:
+      __job_resource__select: 'no'
+      __current_case__: 0
+    barcode: 'true'
+    capture_log: 'true'
+    cc:
+      command: score
+      __current_case__: 1
+      start: '17'
+    fastq_in:
+      __class__: ConnectedValue
+    maxerror: '0.5'
+    mode: cut
+    primers_in:
+      __class__: ConnectedValue
+    revpr: 'false'
+  in:
+    primers_in:
+      source: R2 Primer FASTA
+    fastq_in:
+      source: 10/fastq_out
+  out:
+    fastq_out:
+      hide: true
+    log_out:
+      hide: true
+- tool_shed_repository:
+    name: presto_parselog
+    owner: iuc
+    changeset_revision: 488cd05be723
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_parselog/presto_parselog/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 666.5000305175781
+    height: 113.60000610351562
+    left: -92.5
+    right: 107.5
+    top: 552.9000244140625
+    width: 200
+    x: -92.5
+    y: 552.9000244140625
+  tool_state:
+    fields: ID QUALITY
+    log_file:
+      __class__: ConnectedValue
+  in:
+    log_file:
+      source: 10/log_out
+  out:
+    output:
+      hide: true
+- tool_shed_repository:
+    name: presto_parselog
+    owner: iuc
+    changeset_revision: 488cd05be723
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_parselog/presto_parselog/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 562.5
+    height: 113.60000610351562
+    left: 177.5
+    right: 377.5
+    top: 448.8999938964844
+    width: 200
+    x: 177.5
+    y: 448.8999938964844
+  tool_state:
+    fields: ID BARCODE PRIMER ERROR
+    log_file:
+      __class__: ConnectedValue
+  in:
+    log_file:
+      source: 11/log_out
+  out:
+    output:
+      hide: true
+- tool_shed_repository:
+    name: presto_pairseq
+    owner: iuc
+    changeset_revision: f47efbc66fad
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_pairseq/presto_pairseq/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 253.89999389648438
+    height: 154
+    left: 210.5
+    right: 410.5
+    top: 99.89999389648438
+    width: 200
+    x: 210.5
+    y: 99.89999389648438
+  tool_state:
+    coord: illumina
+    r1_annotations: ''
+    r1_in:
+      __class__: ConnectedValue
+    r2_annotations: BARCODE
+    r2_in:
+      __class__: ConnectedValue
+  in:
+    r1_in:
+      source: 11/fastq_out
+    r2_in:
+      source: 13/fastq_out
+  out:
+    r2_out:
+      hide: true
+    r1_out:
+      hide: true
+- tool_shed_repository:
+    name: presto_parselog
+    owner: iuc
+    changeset_revision: 488cd05be723
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_parselog/presto_parselog/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 684.5000305175781
+    height: 113.60000610351562
+    left: 175.5
+    right: 375.5
+    top: 570.9000244140625
+    width: 200
+    x: 175.5
+    y: 570.9000244140625
+  tool_state:
+    fields: ID BARCODE PRIMER ERROR
+    log_file:
+      __class__: ConnectedValue
+  in:
+    log_file:
+      source: 13/log_out
+  out:
+    output:
+      hide: true
+- tool_shed_repository:
+    name: presto_buildconsensus
+    owner: iuc
+    changeset_revision: 7c7df98db5a9
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_buildconsensus/presto_buildconsensus/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 289.6999969482422
+    height: 184.8000030517578
+    left: 466.5
+    right: 666.5
+    top: 104.89999389648438
+    width: 200
+    x: 466.5
+    y: 104.89999389648438
+  tool_state:
+    __job_resource:
+      __job_resource__select: 'no'
+      __current_case__: 0
+    act: ''
+    bf: BARCODE
+    capture_log: 'true'
+    cf: ''
+    dep: 'false'
+    fastq_in:
+      __class__: ConnectedValue
+    filtering:
+      filter: error
+      __current_case__: 1
+      maxerror: '0.1'
+    freq: '0.6'
+    maxgap: '0.5'
+    n: '1'
+    pf: PRIMER
+    prcons: '0.6'
+    q: '0'
+  in:
+    fastq_in:
+      source: 16/r1_out
+  out:
+    fastq_out:
+      hide: true
+    log_out:
+      hide: true
+- tool_shed_repository:
+    name: presto_buildconsensus
+    owner: iuc
+    changeset_revision: 7c7df98db5a9
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_buildconsensus/presto_buildconsensus/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 490.6999969482422
+    height: 184.8000030517578
+    left: 475.5
+    right: 675.5
+    top: 305.8999938964844
+    width: 200
+    x: 475.5
+    y: 305.8999938964844
+  tool_state:
+    __job_resource:
+      __job_resource__select: 'no'
+      __current_case__: 0
+    act: ''
+    bf: BARCODE
+    capture_log: 'true'
+    cf: ''
+    dep: 'false'
+    fastq_in:
+      __class__: ConnectedValue
+    filtering:
+      filter: error
+      __current_case__: 1
+      maxerror: '0.1'
+    freq: '0.6'
+    maxgap: '0.5'
+    n: '1'
+    pf: PRIMER
+    prcons: '0.6'
+    q: '0'
+  in:
+    fastq_in:
+      source: 16/r2_out
+  out:
+    fastq_out:
+      hide: true
+    log_out:
+      hide: true
+- tool_shed_repository:
+    name: presto_parselog
+    owner: iuc
+    changeset_revision: 488cd05be723
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_parselog/presto_parselog/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 540.5
+    height: 113.60000610351562
+    left: 738.5
+    right: 938.5
+    top: 426.8999938964844
+    width: 200
+    x: 738.5
+    y: 426.8999938964844
+  tool_state:
+    fields: BARCODE SEQCOUNT CONSCOUNT PRIMER PRCONS PRCOUNT PRFREQ ERROR
+    log_file:
+      __class__: ConnectedValue
+  in:
+    log_file:
+      source: 18/log_out
+  out:
+    output:
+      hide: true
+- tool_shed_repository:
+    name: presto_pairseq
+    owner: iuc
+    changeset_revision: f47efbc66fad
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_pairseq/presto_pairseq/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 270.8999938964844
+    height: 154
+    left: 778.5
+    right: 978.5
+    top: 116.89999389648438
+    width: 200
+    x: 778.5
+    y: 116.89999389648438
+  tool_state:
+    coord: presto
+    r1_annotations: ''
+    r1_in:
+      __class__: ConnectedValue
+    r2_annotations: ''
+    r2_in:
+      __class__: ConnectedValue
+  in:
+    r2_in:
+      source: 19/fastq_out
+    r1_in:
+      source: 18/fastq_out
+  out:
+    r2_out:
+      hide: true
+    r1_out:
+      hide: true
+- tool_shed_repository:
+    name: presto_parselog
+    owner: iuc
+    changeset_revision: 488cd05be723
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_parselog/presto_parselog/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 692.5000305175781
+    height: 113.60000610351562
+    left: 723.5
+    right: 923.5
+    top: 578.9000244140625
+    width: 200
+    x: 723.5
+    y: 578.9000244140625
+  tool_state:
+    fields: BARCODE SEQCOUNT CONSCOUNT PRIMER PRCONS PRCOUNT PRFREQ ERROR
+    log_file:
+      __class__: ConnectedValue
+  in:
+    log_file:
+      source: 19/log_out
+  out:
+    output:
+      hide: true
+- tool_shed_repository:
+    name: presto_assemblepairs
+    owner: iuc
+    changeset_revision: 44c980933450
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_assemblepairs/presto_assemblepairs/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 399.8999938964844
+    height: 266
+    left: 1041.5
+    right: 1241.5
+    top: 133.89999389648438
+    width: 200
+    x: 1041.5
+    y: 133.89999389648438
+  tool_state:
+    __job_resource:
+      __job_resource__select: 'no'
+      __current_case__: 0
+    capture_log: 'true'
+    cc:
+      command: sequential
+      __current_case__: 3
+      alpha: 1e-05
+      maxerror: '0.3'
+      minlen: '8'
+      maxlen: '1000'
+      scanrev: 'true'
+      r:
+        __class__: ConnectedValue
+      minident: '0.5'
+      evalue: 1e-05
+      maxhits: '100'
+      fill: 'false'
+      aligner: blastn
+    coord: presto
+    r1_annotations: CONSCOUNT
+    r1_in:
+      __class__: ConnectedValue
+    r2_annotations: PRCONS CONSCOUNT
+    r2_in:
+      __class__: ConnectedValue
+    rc: tail
+  in:
+    cc|r:
+      source: Immune Ref FASTA
+    r1_in:
+      source: 21/r1_out
+    r2_in:
+      source: 21/r2_out
+  out:
+    fastq_out:
+      hide: true
+    log_out:
+      hide: true
+- label: mask low quality bases
+  tool_shed_repository:
+    name: presto_filterseq
+    owner: iuc
+    changeset_revision: 7b102129b1e8
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_filterseq/presto_filterseq/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 325.6999969482422
+    height: 184.8000030517578
+    left: 1336.5
+    right: 1536.5
+    top: 140.89999389648438
+    width: 200
+    x: 1336.5
+    y: 140.89999389648438
+  tool_state:
+    __job_resource:
+      __job_resource__select: 'no'
+      __current_case__: 0
+    capture_log: 'true'
+    cc:
+      command: maskqual
+      __current_case__: 4
+      q: '0'
+    fastq_in:
+      __class__: ConnectedValue
+  in:
+    fastq_in:
+      source: 23/fastq_out
+  out:
+    fastq_out:
+      hide: true
+    log_out:
+      hide: true
+- tool_shed_repository:
+    name: presto_parselog
+    owner: iuc
+    changeset_revision: 488cd05be723
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_parselog/presto_parselog/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 487.5
+    height: 113.60000610351562
+    left: 1331.5
+    right: 1531.5
+    top: 373.8999938964844
+    width: 200
+    x: 1331.5
+    y: 373.8999938964844
+  tool_state:
+    fields: ID REFID LENGTH OVERLAP GAP ERROR PVALUE EVALUE1 EVALUE2 IDENTITY FIELDS1
+      FIELDS2
+    log_file:
+      __class__: ConnectedValue
+  in:
+    log_file:
+      source: 23/log_out
+  out:
+    output:
+      hide: true
+- tool_shed_repository:
+    name: presto_maskprimers
+    owner: iuc
+    changeset_revision: 14e648d05cce
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_maskprimers/presto_maskprimers/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 358.1000061035156
+    height: 215.20001220703125
+    left: 1594.5
+    right: 1794.5
+    top: 142.89999389648438
+    width: 200
+    x: 1594.5
+    y: 142.89999389648438
+  tool_state:
+    __job_resource:
+      __job_resource__select: 'no'
+      __current_case__: 0
+    barcode: 'false'
+    capture_log: 'true'
+    cc:
+      command: align
+      __current_case__: 0
+      maxlen: '50'
+      skiprc: 'false'
+      gap_open: '1'
+      gap_extend: '1'
+    fastq_in:
+      __class__: ConnectedValue
+    maxerror: '0.2'
+    mode: cut
+    primers_in:
+      __class__: ConnectedValue
+    revpr: 'false'
+  in:
+    primers_in:
+      source: C-Region FASTA
+    fastq_in:
+      source: mask low quality bases/fastq_out
+  out:
+    log_out:
+      hide: true
+    fastq_out:
+      hide: true
+- tool_shed_repository:
+    name: presto_parselog
+    owner: iuc
+    changeset_revision: 488cd05be723
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_parselog/presto_parselog/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 488.5
+    height: 113.60000610351562
+    left: 1581.5
+    right: 1781.5
+    top: 374.8999938964844
+    width: 200
+    x: 1581.5
+    y: 374.8999938964844
+  tool_state:
+    fields: ID MASKED
+    log_file:
+      __class__: ConnectedValue
+  in:
+    log_file:
+      source: mask low quality bases/log_out
+  out:
+    output:
+      hide: true
+- tool_shed_repository:
+    name: presto_parselog
+    owner: iuc
+    changeset_revision: 488cd05be723
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_parselog/presto_parselog/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 350.5
+    height: 113.60000610351562
+    left: 1903.5
+    right: 2103.5
+    top: 236.89999389648438
+    width: 200
+    x: 1903.5
+    y: 236.89999389648438
+  tool_state:
+    fields: ID PRIMER ERROR
+    log_file:
+      __class__: ConnectedValue
+  in:
+    log_file:
+      source: 26/log_out
+  out:
+    output:
+      hide: true
+- label: rename cregion based on primers
+  tool_shed_repository:
+    name: presto_parseheaders
+    owner: iuc
+    changeset_revision: 90315cb06d06
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_parseheaders/presto_parseheaders/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 476.5
+    height: 113.60000610351562
+    left: 1904.5
+    right: 2104.5
+    top: 362.8999938964844
+    width: 200
+    x: 1904.5
+    y: 362.8999938964844
+  tool_state:
+    cc:
+      command: rename
+      __current_case__: 5
+      f: PRIMER
+      k: CREGION
+      act: first
+    fastq_in:
+      __class__: ConnectedValue
+  in:
+    fastq_in:
+      source: 26/fastq_out
+  out:
+    output:
+      hide: true
+- label: Final Report
+  tool_shed_repository:
+    name: prestor_abseq3
+    owner: iuc
+    changeset_revision: ef917c03493c
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/prestor_abseq3/prestor_abseq3/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 317.1000061035156
+    height: 479.20001220703125
+    left: 2167
+    right: 2367
+    top: -162.10000610351562
+    width: 200
+    x: 2167
+    y: -162.10000610351562
+  tool_state:
+    assemble:
+      __class__: ConnectedValue
+    cons1:
+      __class__: ConnectedValue
+    cons2:
+      __class__: ConnectedValue
+    cregion:
+      __class__: ConnectedValue
+    maskqual:
+      __class__: ConnectedValue
+    primer1:
+      __class__: ConnectedValue
+    primer2:
+      __class__: ConnectedValue
+    qual1:
+      __class__: ConnectedValue
+    qual2:
+      __class__: ConnectedValue
+    sample: _
+  in:
+    qual1:
+      source: '12'
+    qual2:
+      source: '14'
+    cons2:
+      source: '22'
+    primer2:
+      source: '17'
+    assemble:
+      source: '25'
+    primer1:
+      source: '15'
+    maskqual:
+      source: '27'
+    cregion:
+      source: '28'
+    cons1:
+      source: '20'
+- label: Final sequences
+  tool_shed_repository:
+    name: presto_parseheaders
+    owner: iuc
+    changeset_revision: 90315cb06d06
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_parseheaders/presto_parseheaders/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 692.1000366210938
+    height: 93.20001220703125
+    left: 1518.5
+    right: 1718.5
+    top: 598.9000244140625
+    width: 200
+    x: 1518.5
+    y: 598.9000244140625
+  tool_state:
+    cc:
+      command: collapse
+      __current_case__: 1
+      f: CONSCOUNT
+      act: min
+    fastq_in:
+      __class__: ConnectedValue
+  in:
+    fastq_in:
+      source: rename cregion based on primers
+  out:
+    output:
+      rename: Final sequences
+      hide: true
+- label: C-Region Table
+  tool_shed_repository:
+    name: presto_parseheaders
+    owner: iuc
+    changeset_revision: 90315cb06d06
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_parseheaders/presto_parseheaders/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 894.1000366210938
+    height: 93.20001220703125
+    left: 1488.5
+    right: 1688.5
+    top: 800.9000244140625
+    width: 200
+    x: 1488.5
+    y: 800.9000244140625
+  tool_state:
+    cc:
+      command: table
+      __current_case__: 6
+      f: ID PRCONS CREGION CONSCOUNT
+    fastq_in:
+      __class__: ConnectedValue
+  in:
+    fastq_in:
+      source: Final sequences
+  out:
+    output:
+      hide: true
+      rename: Report on final sequences
+- label: Unique Sequences
+  tool_shed_repository:
+    name: presto_collapseseq
+    owner: iuc
+    changeset_revision: d1a1b738c119
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_collapseseq/presto_collapseseq/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 726.9000244140625
+    height: 134
+    left: 1830.5
+    right: 2030.5
+    top: 592.9000244140625
+    width: 200
+    x: 1830.5
+    y: 592.9000244140625
+  tool_state:
+    act: sum
+    capture_log: 'false'
+    cf: CONSCOUNT
+    fastq_in:
+      __class__: ConnectedValue
+    inner: 'true'
+    keepmiss: 'true'
+    n: '0'
+    representative:
+      select_by: first
+      __current_case__: 0
+    uf: PRCONS CREGION
+  in:
+    fastq_in:
+      source: Final sequences
+  out:
+    fastq_out:
+      rename: Unique sequences
+- label: Uniq C-region Table
+  tool_shed_repository:
+    name: presto_parseheaders
+    owner: iuc
+    changeset_revision: 90315cb06d06
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_parseheaders/presto_parseheaders/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 940.9000244140625
+    height: 134
+    left: 1799.5
+    right: 1999.5
+    top: 806.9000244140625
+    width: 200
+    x: 1799.5
+    y: 806.9000244140625
+  tool_state:
+    cc:
+      command: table
+      __current_case__: 6
+      f: ID PRCONS CREGION CONSCOUNT DUPCOUNT
+    fastq_in:
+      __class__: ConnectedValue
+  in:
+    fastq_in:
+      source: Unique Sequences/fastq_out
+  out:
+    output:
+      rename: Report on Unique Sequences
+- tool_shed_repository:
+    name: presto_partition
+    owner: iuc
+    changeset_revision: 0b103d43a2c7
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_partition/presto_partition/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 769.7000274658203
+    height: 184.8000030517578
+    left: 2130.5
+    right: 2330.5
+    top: 584.9000244140625
+    width: 200
+    x: 2130.5
+    y: 584.9000244140625
+  tool_state:
+    fastq_in:
+      __class__: ConnectedValue
+    field: CONSCOUNT
+    threshold: '2'
+  in:
+    fastq_in:
+      source: Unique Sequences/fastq_out
+  out:
+    lower_out:
+      hide: true
+    upper_out:
+      rename: Unique sequences (>=2  reads)
+- label: Unique C-region Table (>=2 obs)
+  tool_shed_repository:
+    name: presto_parseheaders
+    owner: iuc
+    changeset_revision: 90315cb06d06
+    tool_shed: toolshed.g2.bx.psu.edu
+  tool_id: toolshed.g2.bx.psu.edu/repos/iuc/presto_parseheaders/presto_parseheaders/0.5.4
+  tool_version: 0.5.4
+  position:
+    bottom: 927.9000244140625
+    height: 134
+    left: 2097.5
+    right: 2297.5
+    top: 793.9000244140625
+    width: 200
+    x: 2097.5
+    y: 793.9000244140625
+  tool_state:
+    cc:
+      command: table
+      __current_case__: 6
+      f: ID PRCONS CREGION CONSCOUNT DUPCOUNT
+    fastq_in:
+      __class__: ConnectedValue
+  in:
+    fastq_in:
+      source: 35/upper_out
+  out:
+    output:
+      rename: Report on Unique sequences (>=2 reads)
+version: 22
