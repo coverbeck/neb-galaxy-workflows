@@ -1,7 +1,7 @@
 version: 1.2
 workflows:
   - subclass: GALAXY
-    name: 'NEBNext_Immune_ Sequencing'
+    name: 'NEBNext_Immune_Sequencing'
     primaryDescriptorPath: /nebnext-immune-sequencing/presto_immune_sequencing_v3.20.ga
     authors:
       - orcid: 0000-0001-7390-1094
