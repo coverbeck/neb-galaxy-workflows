@@ -1,6 +1,6 @@
 version: 1.2
 workflows:
-  - subclass: GALAXY
+  - subclass: Galaxy
     name: 'NEBNext_Immune_Sequencing'
     primaryDescriptorPath: /nebnext-immune-sequencing/presto_immune_sequencing_v3.20.ga
     authors:
